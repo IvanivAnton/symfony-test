@@ -34,13 +34,6 @@ class Good
     #[Groups(['read'])]
     private string $name;
 
-    public function __serialize(): array
-    {
-        return [
-            "price" => $this->price,
-        ];
-    }
-
     /**
      * @return int|null
      */
