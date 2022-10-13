@@ -5,6 +5,7 @@ namespace App\Controller\Api\V1;
 use App\Domain\UseCases\GetManufacturerList;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ManufacturerListController extends AbstractController
@@ -21,7 +22,7 @@ class ManufacturerListController extends AbstractController
 
 
     #[Route(path:'/manufacturer/', name: 'manufacturer.list', methods: 'GET')]
-    public function index(): JsonResponse
+    public function index(): Response
     {
         return $this->getManufacturerList->handle();
     }

@@ -6,6 +6,7 @@ use App\Domain\UseCases\GetGoodList;
 use App\Requests\GetGoodsListRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class GoodListController extends AbstractController
@@ -19,7 +20,7 @@ class GoodListController extends AbstractController
 
 
     #[Route(path:'/good/', name: 'good.list', methods: 'GET')]
-    public function __invoke(GetGoodsListRequest $request): JsonResponse
+    public function __invoke(GetGoodsListRequest $request): Response
     {
         $request->validate();
         return $this->useCase->handle($request);

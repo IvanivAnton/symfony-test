@@ -7,6 +7,7 @@ use App\Requests;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -24,7 +25,7 @@ class CreateOrderController extends AbstractController
 
 
     #[Route(path:'/order/', name: 'order.create', methods: 'POST')]
-    public function index(Requests\CreateOrderRequest $request): JsonResponse
+    public function index(Requests\CreateOrderRequest $request): Response
     {
         $request->validate();
 

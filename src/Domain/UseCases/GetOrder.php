@@ -2,33 +2,35 @@
 
 namespace App\Domain\UseCases;
 
+use App\Domain\Output\GetOrderOutputInterface;
+use App\Domain\ResponseModel\GetOrderResponseModel;
 use App\Repository\OrderRepository;
 use App\Requests\GetOrderRequest;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class GetOrder
 {
     private OrderRepository $repository;
-    private SerializerInterface $serializer;
+    private GetOrderOutputInterface $output;
 
     /**
      * @param OrderRepository $repository
-     * @param SerializerInterface $serializer
+     * @param GetOrderOutputInterface $output
      */
-    public function __construct(OrderRepository $repository, SerializerInterface $serializer)
+    public function __construct(OrderRepository $repository, GetOrderOutputInterface $output)
     {
         $this->repository = $repository;
-        $this->serializer = $serializer;
+        $this->output = $output;
     }
 
-    public function handle(GetOrderRequest $requestData): JsonResponse
+
+    public function handle(GetOrderRequest $requestData): Response
     {
         $order = $this->repository->find($requestData->getId());
         if(empty($order)) {
-            return new JsonResponse(['message' => 'No such order'], 422);
+            return $this->output->noSuchOrder(new GetOrderResponseModel());
         }
 
-        return JsonResponse::fromJsonString($this->serializer->serialize($order, 'json'));
+        return $this->output->successfullyFetched(new GetOrderResponseModel($order));
     }
 }

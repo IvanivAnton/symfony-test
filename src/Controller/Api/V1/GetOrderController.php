@@ -7,6 +7,7 @@ use App\Requests;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -24,7 +25,7 @@ class GetOrderController extends AbstractController
 
 
     #[Route(path: '/order/{id}', name: 'order.show', requirements: ['id' => '\d+'], methods: 'GET')]
-    public function index(int $id): JsonResponse
+    public function index(int $id): Response
     {
         $getOrderRequest = new Requests\GetOrderRequest($id);
 

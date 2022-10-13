@@ -2,25 +2,32 @@
 
 namespace App\Domain\UseCases;
 
+use App\Domain\Output\GetGoodsListOutputInterface;
+use App\Domain\ResponseModel\GetGoodsListResponseModel;
 use App\Repository\GoodRepository;
 use App\Requests\GetGoodsListRequest;
 use Doctrine\Common\Collections\Criteria;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class GetGoodList
 {
     private GoodRepository $repository;
-    private SerializerInterface $serializer;
+    private GetGoodsListOutputInterface $output;
 
-    public function __construct(GoodRepository $repository, SerializerInterface $serializer)
+    /**
+     * @param GoodRepository $repository
+     * @param GetGoodsListOutputInterface $output
+     */
+    public function __construct(GoodRepository $repository, GetGoodsListOutputInterface $output)
     {
         $this->repository = $repository;
-        $this->serializer = $serializer;
+        $this->output = $output;
     }
 
 
-    public function handle(GetGoodsListRequest $requestModel): JsonResponse
+    public function handle(GetGoodsListRequest $requestModel): Response
     {
         $criteria = new Criteria();
         if (!empty($requestModel->getCategoryId())) {
@@ -40,12 +47,6 @@ class GetGoodList
         }
 
         $goods = $this->repository->findByCriteria($criteria);
-        return JsonResponse::fromJsonString(
-            $this->serializer->serialize(
-                $goods,
-                'json',
-                ['groups' => ['read']]
-            )
-        );
+        return $this->output->successfullyFetched(new GetGoodsListResponseModel($goods));
     }
 }

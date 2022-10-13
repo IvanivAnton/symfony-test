@@ -2,31 +2,29 @@
 
 namespace App\Domain\UseCases;
 
+use App\Domain\Output\GetManufacturerListOutputInterface;
+use App\Domain\ResponseModel\GetManufacturerListResponseModel;
 use App\Repository\ManufacturerRepository;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class GetManufacturerList
 {
     private ManufacturerRepository $repository;
-    private SerializerInterface $serializer;
+    private GetManufacturerListOutputInterface $output;
 
     /**
      * @param ManufacturerRepository $repository
-     * @param SerializerInterface $serializer
+     * @param GetManufacturerListOutputInterface $output
      */
-    public function __construct(ManufacturerRepository $repository, SerializerInterface $serializer)
+    public function __construct(ManufacturerRepository $repository, GetManufacturerListOutputInterface $output)
     {
         $this->repository = $repository;
-        $this->serializer = $serializer;
+        $this->output = $output;
     }
 
-
-    public function handle(): JsonResponse
+    public function handle(): Response
     {
         $manufacturers = $this->repository->findAll();
-        return JsonResponse::fromJsonString(
-            $this->serializer->serialize($manufacturers, 'json')
-        );
+        return $this->output->successfullyFetched(new GetManufacturerListResponseModel($manufacturers));
     }
 }
